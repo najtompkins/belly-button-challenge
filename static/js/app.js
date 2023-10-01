@@ -14,7 +14,7 @@ d3.select("#selDataset").on("change", function() {
 });
 // CODE FROM LUIS NORDA /\
 
-// Priary action calls this function to update the graphs,
+// Primary action calls this function to update the graphs,
 function optionChanged(selectedValue) {
   // verify selectedValue (ID of sample)
   console.log(selectedValue)
@@ -38,6 +38,7 @@ function optionChanged(selectedValue) {
     updateBar(sampleData)
     updateBubble(sampleData)
     updateMetaData(metaData)
+    updateGauge(metaData)
   })
 }
 
@@ -112,6 +113,35 @@ function updateMetaData(metaData) {
   div.append("div").classed("appended-data", true).text(`ID: ${metaData.wfreq}`)
 }
 
+// UPDATE FUNCTION
+// Update the Gauge
+function updateGauge(metaData) {
+
+// Update the gauge chart
+  var data = [
+    {
+        type: "indicator",
+        mode: "gauge",
+        value: metaData.wfreq,
+        title: { text: `Daily Washing Frequency of Participant ${metaData.id}`  },
+        gauge: {
+            axis: { range: [0, 9], tickvals: [0, 2, 4, 6, 8], ticktext: ["0-1", "2-3", "4-5", "6-7", "8-9"] },
+            bar: { color: "black" },
+            steps: [
+                { range: [0, 2], color: "darkgreen" },
+                { range: [2, 4], color: "green" },
+                { range: [4, 6], color: "lightgreen" },
+                { range: [6, 8], color: "white" },
+                { range: [8, 9], color: "silver" }
+            ],
+        },
+    },
+  ];
+
+  var layout = { width: 500, height: 400 };
+  Plotly.newPlot("gauge", data, layout);
+}
+
 // INIT() FUNCTION
 // Populate the dropdown menu
 function populateDropdown(data) {
@@ -150,6 +180,7 @@ function init(firstID) {
   initBar(sampleData)
   initBubble(sampleData)
   initMetadata(metaData)
+  initGauge(metaData)
 })
 }
 
@@ -227,6 +258,40 @@ function initBubble(sampleData) {
   
   // Create the chart
   Plotly.newPlot('bubbleChart', data, layout);
+}
+
+
+// INIT() FUNCTION
+// Initialize the Gauge chart
+function initGauge(metaData) {
+
+  // Set the value of the gauge chart for the data
+var value = metaData.wfreq
+// console.log(value)
+
+// Create the gauge chart
+var data = [
+    {
+        type: "indicator",
+        mode: "gauge",
+        value: value,
+        title: { text: `Daily Washing Frequency of Participant ${metaData.id}`  },
+        gauge: {
+            axis: { range: [0, 9], tickvals: [0, 2, 4, 6, 8], ticktext: ["0-1", "2-3", "4-5", "6-7", "8-9"] },
+            bar: { color: "black" },
+            steps: [
+                { range: [0, 2], color: "darkgreen" },
+                { range: [2, 4], color: "green" },
+                { range: [4, 6], color: "lightgreen" },
+                { range: [6, 8], color: "white" },
+                { range: [8, 9], color: "silver" }
+            ],
+        },
+    },
+];
+
+var layout = { width: 500, height: 400 };
+Plotly.newPlot("gauge", data, layout);
 }
 
 // INIT() FUNCTION
